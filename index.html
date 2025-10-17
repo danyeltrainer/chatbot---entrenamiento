@@ -1,1 +1,1073 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Integral de Nutrición y Entrenamiento por Dany el Trainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chat-link {
+            text-decoration: underline;
+            font-weight: 600;
+            color: #ef4444;
+        }
+        .dark .chat-link {
+            color: #f87171;
+        }
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .styled-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-top: 1rem;
+        }
+        .styled-table th, .styled-table td {
+            border: 2px solid #4b5563;
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        .dark .styled-table th, .dark .styled-table td {
+            border-color: #9ca3af;
+        }
+        .styled-table th {
+            background-color: #1f2937;
+            color: #f9fafb;
+            font-weight: 600;
+        }
+        .styled-table td {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+        .dark .styled-table td {
+            background-color: #4b5563;
+            color: #f3f4f6;
+        }
+        .training-card {
+            border-left: 4px solid #ef4444;
+            background-color: #fef2f2;
+            color: #1f2937;
+        }
+        .dark .training-card {
+            background-color: #991b1b;
+            color: #f9fafb;
+        }
+        .recipe-card {
+            border-left: 4px solid #10b981;
+            background-color: #f0fdf4;
+            color: #1f2937;
+        }
+        .dark .recipe-card {
+            background-color: #064e3b;
+            color: #f9fafb;
+        }
+        .info-card {
+            border-left: 4px solid #3b82f6;
+            background-color: #eff6ff;
+            color: #1f2937;
+        }
+        .dark .info-card {
+            background-color: #1e3a8a;
+            color: #f9fafb;
+        }
+        .guide-card {
+            border-left: 4px solid #8b5cf6;
+            background-color: #faf5ff;
+            color: #1f2937;
+        }
+        .dark .guide-card {
+            background-color: #5b21b6;
+            color: #f9fafb;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce 1.2s infinite;
+        }
+        /* Mejoras para móvil */
+        @media (max-width: 768px) {
+            .styled-table {
+                font-size: 0.75rem;
+            }
+            .styled-table th, .styled-table td {
+                padding: 0.5rem;
+            }
+            .option-btn {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+        /* Scroll suave */
+        .chat-message {
+            scroll-margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col items-center justify-center min-h-screen p-2 sm:p-4">
 
+    <div class="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex flex-col h-[95vh] sm:h-[90vh]">
+        <header class="bg-gradient-to-r from-red-600 to-orange-500 text-white p-3 sm:p-4 rounded-t-2xl flex items-center shadow-md">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 3.5a1.5 1.5 0 011.5 1.5v2.5a1.5 1.5 0 01-3 0V5A1.5 1.5 0 0110 3.5zM3.5 10a1.5 1.5 0 00-1.5 1.5v2.5a1.5 1.5 0 003 0V11.5A1.5 1.5 0 003.5 10zm13 0a1.5 1.5 0 00-1.5 1.5v2.5a1.5 1.5 0 003 0V11.5a1.5 1.5 0 00-1.5-1.5z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-lg sm:text-xl font-bold">Chat de Nutrición y Entrenamiento</h1>
+                <p class="text-xs sm:text-sm opacity-80">Por Dany el Trainer</p>
+            </div>
+        </header>
+
+        <main id="chat-window" class="flex-1 p-3 sm:p-6 overflow-y-auto space-y-3 sm:space-y-4">
+            <!-- Los mensajes del chat se agregarán aquí -->
+        </main>
+
+        <footer class="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-b-2xl border-t border-gray-200 dark:border-gray-600">
+            <div id="options-container" class="flex flex-wrap gap-1 sm:gap-2 justify-center">
+                <!-- Los botones de opciones se agregarán aquí -->
+            </div>
+            <div id="input-container" class="flex items-center space-x-2 hidden mt-2">
+                <input type="text" id="user-input" aria-label="Escribe tu respuesta" placeholder="Escribe tu respuesta..." class="flex-1 p-2 sm:p-3 bg-gray-100 dark:bg-gray-600 rounded-full border border-gray-300 dark:border-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm sm:text-base">
+                <button id="send-btn" class="bg-red-600 text-white rounded-full p-2 sm:p-3 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const optionsContainer = document.getElementById('options-container');
+        const inputContainer = document.getElementById('input-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        let conversationState = 'start';
+        let userData = {};
+        
+        const recipes = {
+            'panqueques_avena': { 
+                name: 'Panqueques de avena y chía', 
+                prepTime: '15 min', 
+                calories: '~184 kcal/porción', 
+                message: `<div class="recipe-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-green-800 dark:text-green-200 text-sm sm:text-base">🥞 Panqueques de avena y chía</p>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">⏱️ 15 min | 🔥 ~184 kcal/porción</p>
+                    <p class="mt-2 sm:mt-3 text-sm"><strong>Ingredientes (2 porciones):</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-xs sm:text-sm">
+                        <li>1 taza de avena</li>
+                        <li>1 cdta de chía</li>
+                        <li>1 taza de leche vegetal</li>
+                        <li>Endulzante a gusto</li>
+                    </ul>
+                    <p class="mt-2 sm:mt-3 text-sm"><strong>Preparación:</strong></p>
+                    <ol class="list-decimal list-inside mt-1 text-xs sm:text-sm">
+                        <li>Licuar todos los ingredientes</li>
+                        <li>Verter en sartén caliente con poco aceite</li>
+                        <li>Cocinar por ambos lados hasta dorar</li>
+                    </ol>
+                </div>`
+            },
+            'brownie_porotos': { 
+                name: 'Brownie de porotos negros', 
+                prepTime: '35 min', 
+                calories: '~154 kcal/porción', 
+                message: `<div class="recipe-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-green-800 dark:text-green-200 text-sm sm:text-base">🍫 Brownie de porotos negros</p>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">⏱️ 35 min | 🔥 ~154 kcal/porción</p>
+                    <p class="mt-2 sm:mt-3 text-sm"><strong>Ingredientes (8 porciones):</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-xs sm:text-sm">
+                        <li>1 taza de porotos negros cocidos</li>
+                        <li>2 plátanos maduros</li>
+                        <li>1/2 taza de cacao en polvo</li>
+                        <li>1/2 taza de harina de avena</li>
+                        <li>Endulzante a gusto</li>
+                    </ul>
+                    <p class="mt-2 sm:mt-3 text-sm"><strong>Preparación:</strong></p>
+                    <ol class="list-decimal list-inside mt-1 text-xs sm:text-sm">
+                        <li>Procesar todos los ingredientes</li>
+                        <li>Verter en molde aceitado</li>
+                        <li>Hornear 25 min a temperatura baja</li>
+                    </ol>
+                </div>`
+            },
+            'hamburguesas_lentejas': { 
+                name: 'Hamburguesas de lentejas', 
+                prepTime: '30 min', 
+                calories: '~170 kcal/2 unidades', 
+                message: `<div class="recipe-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-green-800 dark:text-green-200 text-sm sm:text-base">🍔 Hamburguesas de lentejas</p>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">⏱️ 30 min | 🔥 ~170 kcal/2 unidades</p>
+                    <p class="mt-2 sm:mt-3 text-sm"><strong>Ingredientes (10 unidades):</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-xs sm:text-sm">
+                        <li>3 tazas de lentejas cocidas</li>
+                        <li>3 cdas de harina de avena</li>
+                        <li>Verduras salteadas (cebolla, zanahoria)</li>
+                        <li>Aliños a gusto</li>
+                    </ul>
+                    <p class="mt-2 sm:mt-3 text-sm"><strong>Preparación:</strong></p>
+                    <ol class="list-decimal list-inside mt-1 text-xs sm:text-sm">
+                        <li>Mezclar los ingredientes</li>
+                        <li>Formar las hamburguesas</li>
+                        <li>Hornear 10 minutos por lado</li>
+                    </ol>
+                </div>`
+            },
+            'yogur_vegano': { 
+                name: 'Yogur Casero Vegano', 
+                prepTime: '12-15 horas', 
+                calories: '~80 kcal/porción', 
+                message: `<div class="recipe-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-green-800 dark:text-green-200 text-sm sm:text-base">🥛 Yogur Casero Vegano</p>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">⏱️ 12-15 horas | 🔥 ~80 kcal/porción</p>
+                    <p class="mt-2 sm:mt-3 text-sm"><strong>Ingredientes (4 porciones):</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-xs sm:text-sm">
+                        <li>1 litro de leche de soya</li>
+                        <li>2 cdas de yogur vegano comercial o cápsulas de probióticos</li>
+                        <li>1-2 cdas de azúcar (para alimentar a las bacterias)</li>
+                        <li>2 cdas de almidón de maíz o agar-agar (opcional, para espesar)</li>
+                    </ul>
+                    <p class="mt-2 sm:mt-3 text-sm"><strong>Preparación:</strong></p>
+                    <ol class="list-decimal list-inside mt-1 text-xs sm:text-sm">
+                        <li>Calentar la leche a 85°C por 5 minutos (pasteurizar)</li>
+                        <li>Dejar enfriar hasta 45°C</li>
+                        <li>Agregar el cultivo iniciador y mezclar suavemente</li>
+                        <li>Mantener a 45°C por 8-12 horas en yogurtera, horno con luz o termo</li>
+                        <li>Refrigerar 4-6 horas para que espese</li>
+                    </ol>
+                    <p class="mt-3 text-sm"><strong>💡 Consejo:</strong> Guarda 2 cdas de tu yogur casero para usar como cultivo iniciador en tu próximo batch.</p>
+                </div>`
+            },
+            'reemplazos_huevo': { 
+                name: 'Reemplazos del Huevo', 
+                prepTime: '5 min', 
+                calories: 'Varía según opción', 
+                message: `<div class="recipe-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-green-800 dark:text-green-200 text-sm sm:text-base">🍳 Reemplazos del Huevo</p>
+                    <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">⏱️ 5 min | 🔥 Varía según opción</p>
+                    
+                    <div class="mt-3">
+                        <p class="text-sm"><strong>Para aglutinar (equivale a 1 huevo):</strong></p>
+                        <ul class="list-disc list-inside mt-1 ml-2 text-xs sm:text-sm">
+                            <li><strong>Puré de plátano maduro:</strong> ¼ taza (ideal para postres)</li>
+                            <li><strong>Puré de manzana:</strong> ¼ taza (menos dulce)</li>
+                            <li><strong>Semillas de chía o linaza:</strong> 1 cda + 3 cdas de agua (dejar reposar 5 min)</li>
+                            <li><strong>Agar-agar:</strong> 1 cda disuelta en 1 cda de agua</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="text-sm"><strong>Para "huevo revuelto" vegano:</strong></p>
+                        <ul class="list-disc list-inside mt-1 ml-2 text-xs sm:text-sm">
+                            <li><strong>Tofu firme:</strong> Desmenuzar y saltear con cúrcuma y sal negra</li>
+                            <li><strong>Garbanzos:</strong> Triturar con harina de garbanzo y especias</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="text-sm"><strong>Para espumar (merengue):</strong></p>
+                        <ul class="list-disc list-inside mt-1 ml-2 text-xs sm:text-sm">
+                            <li><strong>Aquafaba:</strong> Líquido de cocción de garbanzos (3 cdas = 1 clara)</li>
+                        </ul>
+                    </div>
+                </div>`
+            }
+        };
+
+        const conversationTree = {
+            'start': {
+                message: `¡Bienvenido/a al Chat Integral de <strong>Dany el Trainer</strong>!<div class="mt-3 sm:mt-4 training-card p-3 sm:p-4 rounded-lg chat-message"><strong>💡 Mi filosofía: "El movimiento es bienestar"</strong><p class="mt-2 text-xs sm:text-sm">La nutrición te da el combustible, pero el <strong>entrenamiento construye el motor.</strong> Sin movimiento, los resultados siempre serán limitados.</p></div><p class="mt-3 sm:mt-4 text-sm">Elige un tema para comenzar:</p>`,
+                options: [ 
+                    { text: "🏋️‍♂️ Entrenamiento", nextState: 'training_intro' }, 
+                    { text: "🍎 Nutrición", nextState: 'nutrition_main' }, 
+                    { text: "📚 Recetas", nextState: 'recipe_menu' }, 
+                    { text: "💼 Servicios", nextState: 'services_info' }, 
+                    { text: "👤 Sobre Mí", nextState: 'info_trainer' } 
+                ]
+            },
+
+            // --- SECCIÓN ENTRENAMIENTO ---
+            'training_intro': {
+                message: `<div class="training-card p-3 sm:p-4 rounded-lg chat-message"><strong>🏋️‍♂️ EL ENTRENAMIENTO ES LA PIEZA CLAVE</strong><p class="mt-2 text-sm">Puedes tener la mejor nutrición, pero sin un entrenamiento adecuado, nunca alcanzarás tu máximo potencial.</p></div>`,
+                options: [ 
+                    { text: "💡 Consejos", nextState: 'training_tips' }, 
+                    { text: "🤸 Estilos", nextState: 'training_styles' }, 
+                    { text: "🌟 Beneficios", nextState: 'training_benefits' }, 
+                    { text: "💧 Hidratación", nextState: 'hydration_info' },
+                    { text: "📚 Recursos", nextState: 'practical_guides' },
+                    { text: "‹ Volver", nextState: 'start' } 
+                ]
+            },
+
+            // --- BENEFICIOS EXPANDIDOS ---
+            'training_benefits': {
+                message: `<div class="training-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>🌟 BENEFICIOS INTEGRALES DEL ENTRENAMIENTO</strong>
+                    <p class="mt-2 text-sm">El entrenamiento especializado transforma tu vida en múltiples dimensiones, construyendo autonomía y cuerpos disponibles para lo que quieras hacer:</p>
+                    
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm">🧠 TRANSFORMACIÓN NEURONAL Y COGNITIVA:</p>
+                        <ul class="list-disc list-inside mt-1 text-xs">
+                            <li><strong>Neuroplasticidad mejorada:</strong> Creación de nuevas conexiones neuronales</li>
+                            <li><strong>Funciones ejecutivas optimizadas:</strong> Atención, memoria, planificación</li>
+                            <li><strong>Resiliencia cognitiva:</strong> Mayor capacidad de adaptación mental</li>
+                            <li><strong>Velocidad de procesamiento:</strong> Agilidad mental y toma de decisiones</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm">⚖️ REGULACIÓN HORMONAL Y METABÓLICA:</p>
+                        <ul class="list-disc list-inside mt-1 text-xs">
+                            <li><strong>Balance endocrino:</strong> Optimización de cortisol, insulina, hormonas tiroideas</li>
+                            <li><strong>Sensibilidad insulinica:</strong> Mejor control del azúcar en sangre</li>
+                            <li><strong>Metabolismo de grasas:</strong> Optimización del uso de energía</li>
+                            <li><strong>Hormonas de bienestar:</strong> Aumento de endorfinas, serotonina, dopamina</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm">💪 FORTALECIMIENTO FISIOLÓGICO:</p>
+                        <ul class="list-disc list-inside mt-1 text-xs">
+                            <li><strong>Salud cardiovascular:</strong> Corazón más eficiente y presión arterial estable</li>
+                            <li><strong>Integridad ósea:</strong> Prevención de osteoporosis y fracturas</li>
+                            <li><strong>Articulaciones resilientes:</strong> Mayor rango de movimiento y protección</li>
+                            <li><strong>Sistema inmunológico:</strong> Defensas fortalecidas y respuesta inflamatoria equilibrada</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm">🎯 DESARROLLO EMOCIONAL Y MENTAL:</p>
+                        <ul class="list-disc list-inside mt-1 text-xs">
+                            <li><strong>Regulación emocional:</strong> Mayor capacidad de manejar estrés y ansiedad</li>
+                            <li><strong>Autoeficacia:</strong> Confianza en tus capacidades para lograr objetivos</li>
+                            <li><strong>Resiliencia psicológica:</strong> Capacidad de recuperación ante adversidades</li>
+                            <li><strong>Claridad mental:</strong> Reducción de niebla mental y mayor enfoque</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm">🕊️ AUTONOMÍA E INDEPENDENCIA:</p>
+                        <ul class="list-disc list-inside mt-1 text-xs">
+                            <li><strong>Cuerpos disponibles:</strong> Capacidad física para cualquier actividad que desees</li>
+                            <li><strong>Independencia funcional:</strong> Autonomía en actividades de la vida diaria</li>
+                            <li><strong>Longevidad de calidad:</strong> Más años de vida activa e independiente</li>
+                            <li><strong>Libertad de movimiento:</strong> Posibilidad de explorar sin limitaciones físicas</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3 p-2 sm:p-3 bg-green-100 dark:bg-green-800 rounded text-xs sm:text-sm">
+                        <p><strong>🎯 Resultado Final:</strong> No se trata solo de un mejor cuerpo, sino de una mejor VIDA. Personas capaces, resilientes y autónomas que pueden perseguir sus pasiones sin limitaciones físicas.</p>
+                    </div>
+                </div>`,
+                options: [ 
+                    { text: "💡 Consejos Prácticos", nextState: 'training_tips' }, 
+                    { text: "💼 Servicios Personalizados", nextState: 'services_info' }, 
+                    { text: "📞 Contactar para Cambio Real", nextState: 'contact_info' }, 
+                    { text: "‹ Volver", nextState: 'training_intro' } 
+                ]
+            },
+
+            // --- ESTILOS DE ENTRENAMIENTO CON LINKS ---
+            'training_styles': {
+                 message: `<div class="training-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>🤸 ESTILOS DE ENTRENAMIENTO</strong>
+                    <div class="mt-2 space-y-3 text-sm">
+                        <div>
+                            <strong>• Fuerza Personalizado</strong>
+                            <p>Para salud, rendimiento y reintegro deportivo</p>
+                        </div>
+                        <div>
+                            <strong>• Entrenamiento Circense</strong>
+                            <p>Acrobacias, Mano a mano</p>
+                        </div>
+                        <div>
+                            <strong>• Breakdance</strong>
+                            <p>Power moves, estilo y acondicionamiento</p>
+                            <p class="text-xs mt-1">
+                                <a href="https://youtu.be/YSXyFdY9akM" target="_blank" class="chat-link">Baby Freeze tutorial</a> | 
+                                <a href="https://www.instagram.com/p/DPFuwJ9akM/" target="_blank" class="chat-link">Parada de cabeza</a>
+                            </p>
+                        </div>
+                        <div>
+                            <strong>• Streetworkout</strong>
+                            <p>Calistenia avanzada y fuerza relativa</p>
+                            <p class="text-xs mt-1">
+                                <a href="https://youtu.be/Iy2p9rwALiU" target="_blank" class="chat-link">Rutina para pararse de manos</a>
+                            </p>
+                        </div>
+                        <div>
+                            <strong>• Firestaff & Malabares</strong>
+                            <p>Coordinación y habilidades únicas</p>
+                            <p class="text-xs mt-1">
+                                <a href="https://www.instagram.com/p/DPUnAzfDUr3/" target="_blank" class="chat-link">Firestaff</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>`,
+                options: [ 
+                    { text: "💡 Consejos", nextState: 'training_tips' }, 
+                    { text: "💼 Servicios", nextState: 'services_info' }, 
+                    { text: "📞 Contactar", nextState: 'contact_info' }, 
+                    { text: "‹ Volver", nextState: 'training_intro' } 
+                ]
+            },
+
+            // --- CONSEJOS DE ENTRENAMIENTO ACTUALIZADOS ---
+            'training_tips': {
+                message: `<div class="training-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>💡 CONSEJOS DE ENTRENAMIENTO</strong>
+                    <div class="mt-2 p-2 sm:p-3 bg-yellow-100 dark:bg-yellow-800 rounded text-xs sm:text-sm">
+                        <strong>⚠️ NOTA IMPORTANTE:</strong> Estas son indicaciones generales que pueden y deben ser ajustadas según cada caso particular por una persona competente. <strong>¿Conversamos para una asesoría personalizada?</strong>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm sm:text-base">🏗️ LA PIRÁMIDE DEL ENTRENAMIENTO FÍSICO:</p>
+                        <div class="mt-2 space-y-2">
+                            <div class="bg-red-100 dark:bg-red-800 p-2 sm:p-3 rounded text-xs sm:text-sm">
+                                <strong>BASE: Movimiento Fundamental</strong>
+                                <p class="mt-1">Dominar los patrones básicos de movimiento antes de avanzar a ejercicios complejos.</p>
+                            </div>
+                            <div class="bg-orange-100 dark:bg-orange-800 p-2 sm:p-3 rounded text-xs sm:text-sm">
+                                <strong>NIVEL 2: Capacidad de Trabajo</strong>
+                                <p class="mt-1">Desarrollar resistencia, fuerza base y capacidad de recuperación.</p>
+                            </div>
+                            <div class="bg-yellow-100 dark:bg-yellow-800 p-2 sm:p-3 rounded text-xs sm:text-sm">
+                                <strong>NIVEL 3: Habilidades EspecÍficas</strong>
+                                <p class="mt-1">Entrenamiento especializado según tu deporte o actividad.</p>
+                            </div>
+                            <div class="bg-green-100 dark:bg-green-800 p-2 sm:p-3 rounded text-xs sm:text-sm">
+                                <strong>CÚSPIDE: Competencia, Shows y Performance</strong>
+                                <p class="mt-1">Optimización del rendimiento para competición, presentaciones artísticas o objetivos específicos de alto nivel.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm sm:text-base">⚡ INTENSIDAD vs ESFUERZO PERCIBIDO:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                            <div class="bg-blue-100 dark:bg-blue-800 p-2 sm:p-3 rounded text-xs sm:text-sm">
+                                <strong>Intensidad (Objetiva)</strong>
+                                <ul class="list-disc list-inside mt-1">
+                                    <li><strong>% de 1RM:</strong> Porcentaje de tu repetición máxima</li>
+                                    <li><strong>Velocidad de ejecución:</strong> Control del tempo (ej: 3-1-2 segundos)</li>
+                                    <li><strong>RIR (Reps en Reserva):</strong> Cuántas repeticiones te faltan para el fallo</li>
+                                </ul>
+                            </div>
+                            <div class="bg-purple-100 dark:bg-purple-800 p-2 sm:p-3 rounded text-xs sm:text-sm">
+                                <strong>Esfuerzo (Subjetivo)</strong>
+                                <ul class="list-disc list-inside mt-1">
+                                    <li><strong>RPE (Esfuerzo Percibido):</strong> Escala 1-10 de dificultad</li>
+                                    <li><strong>Fatiga local-periférica:</strong> Cansancio muscular específico</li>
+                                    <li><strong>Fatiga central:</strong> Cansancio del sistema nervioso</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs sm:text-sm"><strong>💡 Práctica:</strong> La fatiga acumulada es la inmediata de la sesión; la residual perdura y requiere más recuperación. Ambas deben gestionarse estratégicamente.</p>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm sm:text-base">🔬 DESMINTIENDO MITOS: MENTE-MÚSCULO vs BIOMECÁNICA</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-xs sm:text-sm">
+                            <li><strong>Lo realmente importante es la BIOMECÁNICA:</strong> La correcta alineación articular, palancas y brazos de momento determinan la eficiencia del movimiento.</li>
+                            <li><strong>La tensión mecánica es clave:</strong> No confundas la sensación de "ardor" local con tensión mecánica efectiva. Esta última se siente como una presión profunda en los músculos y tejidos conectivos.</li>
+                            <li><strong>RPE 8-10 = Tensión mecánica alta:</strong> Cuando trabajas cerca del fallo (RIR 0-2), produces máxima tensión mecánica, el estímulo principal para la hipertrofia.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm sm:text-base">📉 INTENSIDADES BAJAS vs ADAPTACIONES (≤60% 1RM):</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-xs sm:text-sm">
+                            <li><strong>Objetivos específicos:</strong>
+                                <ul class="list-circle list-inside ml-3 mt-1">
+                                    <li>Recuperación activa y reintegro deportivo</li>
+                                    <li>Exploración de patrones motores y rangos no recorridos</li>
+                                    <li>Poblaciones con limitaciones de salud</li>
+                                    <li>Periodos de adaptación inicial o transición</li>
+                                </ul>
+                            </li>
+                            <li><strong>Combinación estratégica:</strong> Puedes usar intensidades bajas con esfuerzos altos mediante:
+                                <ul class="list-circle list-inside ml-3 mt-1">
+                                    <li>Series de alta repetición (20-30 reps)</li>
+                                    <li>Tiempos bajo tensión prolongados</li>
+                                    <li>Circuitos con pausas mínimas</li>
+                                    <li>Técnicas de intensificación (rest-pause, dropsets)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Limitaciones:</strong> Producen adaptaciones limitadas si no se combinan con otros factores de sobrecarga.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm sm:text-base">📈 INTENSIDADES ALTAS vs ADAPTACIONES (≥70% 1RM):</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-xs sm:text-sm">
+                            <li><strong>Objetivos amplios y profundos:</strong>
+                                <ul class="list-circle list-inside ml-3 mt-1">
+                                    <li>Mejora de la salud general y mantención de condición física</li>
+                                    <li>Desarrollo atlético, artístico y deportivo</li>
+                                    <li>Incremento de fuerza, resistencia y resiliencia</li>
+                                    <li>Optimización metabólica y fortalecimiento tisular</li>
+                                    <li>Fortalecimiento de redes neuronales y capacidades cognitivas</li>
+                                </ul>
+                            </li>
+                            <li><strong>Beneficios integrales:</strong> Las intensidades altas activan adaptaciones que optimizan todo el sistema neuromuscular y metabólico.</li>
+                            <li><strong>Potencial de aplicación:</strong> Mejoran la transferencia a actividades de la vida diaria y desempeño específico.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="font-semibold text-sm sm:text-base">📈 TIPS PARA PROGRESAR EN CUALQUIER ACTIVIDAD:</p>
+                        <ol class="list-decimal list-inside mt-2 space-y-1 text-xs sm:text-sm">
+                            <li><strong>Elige un ejercicio significativo:</strong> Que represente un esfuerzo RPE 7-8 con tu peso corporal o carga adicional.</li>
+                            <li><strong>Trabaja con RIR 3-4:</strong> Mantente a 3-4 repeticiones del fallo muscular, en un rango de 10-15 repeticiones.</li>
+                            <li><strong>Respeta tiempos de recuperación:</strong> Descansos entre series de 2-3 minutos para ejercicios multiarticulares.</li>
+                            <li><strong>Progresa cuando notes facilidad:</strong> <strong>NO en la misma sesión</strong>, sino después de un par de semanas (varía según la persona). Los indicadores de "facilidad" son:
+                                <ul class="list-disc list-inside ml-3 mt-1">
+                                    <li><strong>Velocidad de ejecución:</strong> Mueves la carga más rápido con la misma técnica</li>
+                                    <li><strong>Menor esfuerzo percibido:</strong> Cada repetición se siente más fácil</li>
+                                    <li><strong>Sobrepasas el rango de reps:</strong> Puedes hacer más repeticiones de las propuestas</li>
+                                    <li><strong>Mantienes calidad técnica:</strong> La técnica se mantiene o mejora a lo largo de las series</li>
+                                    <li><strong>Recuperación más rápida:</strong> Te recuperas más pronto entre series</li>
+                                </ul>
+                            </li>
+                            <li><strong>REGISTRA TODO:</strong> Tu diario de entrenamiento es tu llave maestra para el progreso constante.</li>
+                            <li><strong>Semanas de ajuste:</strong> Periódicamente (cada 4-8 semanas), dedica una semana a probar cargas diferentes para evaluar tu progreso real.</li>
+                        </ol>
+                    </div>
+
+                    <div class="mt-3 p-2 sm:p-3 bg-blue-100 dark:bg-blue-800 rounded text-xs sm:text-sm">
+                        <p><strong>🎯 Mi enfoque:</strong> Diseño programas que respetan esta pirámide, comenzando con una base sólida de movimiento y progresando hacia objetivos específicos, aplicando los principios de especificidad, sobrecarga progresiva y tensión mecánica efectiva.</p>
+                    </div>
+                </div>`,
+                options: [ 
+                    { text: "💬 Asesoría Personal", nextState: 'contact_info' }, 
+                    { text: "💼 Servicios", nextState: 'services_info' }, 
+                    { text: "‹ Volver", nextState: 'training_intro' } 
+                ]
+            },
+
+            // --- SECCIÓN NUTRICIÓN COMPLETA ---
+            'nutrition_main': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">🍎 EDUCACIÓN NUTRICIONAL</p>
+                    <p class="mt-2 text-sm">La nutrición es el combustible, pero necesita del entrenamiento para construir resultados reales.</p>
+                </div>`,
+                options: [ 
+                    { text: "📊 Calcular Macros", nextState: 'ask_gender' }, 
+                    { text: "🏗️ Pirámide Nutricional", nextState: 'learn_pyramid_intro' }, 
+                    { text: "💧 Hidratación", nextState: 'hydration_info' },
+                    { text: "📚 Recursos", nextState: 'practical_guides' },
+                    { text: "‹ Volver", nextState: 'start' } 
+                ]
+            },
+
+            // --- PIRÁMIDE NUTRICIONAL COMPLETA ---
+            'learn_pyramid_intro': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">🍎 EDUCACIÓN NUTRICIONAL</p>
+                    <p class="mt-2 text-sm">¡Excelente! Usaremos La Pirámide de la Nutrición para aprender en orden de importancia.</p>
+                    <p class="mt-2 text-sm"><strong>Primero, definamos conceptos clave:</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-sm">
+                        <li><strong>Nutrición:</strong> Proceso biológico de obtención de nutrientes</li>
+                        <li><strong>Alimentación:</strong> Acto consciente de ingerir alimentos</li>
+                        <li><strong>Dieta:</strong> Conjunto de alimentos que consumes habitualmente</li>
+                        <li><strong>Régimen alimenticio:</strong> Plan estructurado con objetivos específicos</li>
+                    </ul>
+                    <p class="mt-2 text-sm">¿Listo para conocer el Nivel 1, la base de todo?</p>
+                </div>`,
+                options: [ { text: "Sí, vamos al Nivel 1", nextState: 'learn_pyramid_level1' }, { text: "‹ Volver", nextState: 'nutrition_main' } ]
+            },
+            'learn_pyramid_level1': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">NIVEL 1: BALANCE ENERGÉTICO</p>
+                    <p class="mt-2 text-sm">Esto es lo más importante: las calorías que consumes vs. las que gastas.</p>
+                    <ul class="list-disc list-inside mt-1 text-sm">
+                        <li>Para perder grasa, necesitas un <strong>déficit calórico</strong> (comer menos de lo que gastas).</li>
+                        <li>Para ganar músculo, necesitas un <strong>superávit calórico</strong> (comer más de lo que gastas).</li>
+                    </ul>
+                    <p class="mt-2 text-sm">Sin esto, nada más funciona. ¿Continuamos al Nivel 2?</p>
+                </div>`,
+                options: [ { text: "Sí, al Nivel 2", nextState: 'learn_pyramid_level2' } ]
+            },
+            'learn_pyramid_level2': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">NIVEL 2: MACRONUTRIENTES</p>
+                    <p class="mt-2 text-sm">Una vez que tienes tus calorías, las distribuyes en los 'macros': Proteínas, Carbohidratos y Grasas. La cantidad de cada uno es clave para la composición corporal.</p>
+                    <p class="mt-2 text-sm"><strong>¿Qué son los macronutrientes?</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-sm">
+                        <li><strong>Proteínas:</strong> Construyen y reparan tejidos (4 kcal/g)</li>
+                        <li><strong>Carbohidratos:</strong> Energía principal (4 kcal/g)</li>
+                        <li><strong>Grasas:</strong> Energía de reserva y funciones vitales (9 kcal/g)</li>
+                    </ul>
+                    <p class="mt-2 text-sm">¿Quieres ver una tabla con fuentes comunes de cada macro?</p>
+                </div>`,
+                options: [ { text: "Sí, mostrar tabla", nextState: 'learn_pyramid_sources' }, { text: "No, ir al Nivel 3", nextState: 'learn_pyramid_level3' } ]
+            },
+            'learn_pyramid_sources': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">FUENTES DE MACRONUTRIENTES</p>
+                    <table class="styled-table mt-3">
+                        <thead><tr><th>Proteínas</th><th>Carbohidratos</th><th>Grasas</th></tr></thead>
+                        <tbody>
+                            <tr><td>Pollo, Pescado, Huevos</td><td>Arroz, Papas, Avena</td><td>Palta, Aceite de Oliva</td></tr>
+                            <tr><td>Carne, Cerdo, Lentejas</td><td>Pan, Fideos, Frutas</td><td>Frutos secos, Semillas</td></tr>
+                            <tr><td>Tofu, Yogurt Griego</td><td>Quinoa, Camote, Choclo</td><td>Pescados grasos (Salmón)</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mt-3 text-sm">¿Continuamos al siguiente nivel?</p>
+                </div>`,
+                options: [{ text: "Sí, vamos al Nivel 3", nextState: 'learn_pyramid_level3' }]
+            },
+            'learn_pyramid_level3': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">NIVEL 3: MICRONUTRIENTES</p>
+                    <p class="mt-2 text-sm">Son las vitaminas y minerales. <strong>AMBOS son igualmente importantes:</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-sm">
+                        <li><strong>Vitaminas:</strong> A, B, C, D, E, K - esenciales para funciones metabólicas</li>
+                        <li><strong>Minerales:</strong> Calcio, Hierro, Zinc, Magnesio - estructura y regulación</li>
+                    </ul>
+                    <p class="mt-2 text-sm"><strong>⚠️ IMPORTANTE:</strong> El déficit de micronutrientes lleva a enfermedades graves como anemia (hierro), escorbuto (vitamina C), raquitismo (vitamina D).</p>
+                    <p class="mt-2 text-sm">Si tu dieta se basa en alimentos poco procesados y tienes una buena variedad de frutas y verduras, es muy probable que estés cubriendo tus necesidades.</p>
+                    <p class="mt-2 text-sm">¿Listo para el Nivel 4?</p>
+                </div>`,
+                options: [ { text: "Sí, al Nivel 4", nextState: 'learn_pyramid_level4' } ]
+            },
+            'learn_pyramid_level4': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">NIVEL 4: TIMING Y FRECUENCIA</p>
+                    <p class="mt-2 text-sm">Aquí hablamos de cuántas veces comer al día y cuándo consumir tus nutrientes (ej: pre/post entreno).</p>
+                    <p class="mt-2 text-sm">Esto tiene un impacto menor. Lo más importante es que cumplas tus calorías y macros totales del día de una forma que se te haga cómoda y sostenible (adherencia).</p>
+                    <p class="mt-2 text-sm">¿Vamos a la punta de la pirámide?</p>
+                </div>`,
+                options: [ { text: "Sí, al Nivel 5", nextState: 'learn_pyramid_level5' } ]
+            },
+            'learn_pyramid_level5': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">NIVEL 5: SUPLEMENTOS (La Punta)</p>
+                    <p class="mt-2 text-sm">Son la parte menos importante. Solo tienen sentido cuando los 4 niveles inferiores ya están optimizados.</p>
+                    <p class="mt-2 text-sm">Suplementos como la proteína en polvo o la creatina pueden ser útiles, pero no son mágicos. Son solo una pequeña ayuda.</p>
+                </div>`,
+                options: [ { text: "Saber más de suplementos", nextState: 'info_suplementos' }, { text: "¡Entendido!", nextState: 'nutrition_main' } ]
+            },
+
+            // --- RECURSOS PRÁCTICOS CON LINK DE DRIVE FUNCIONANDO ---
+            'practical_guides': { 
+                message: `<div class="guide-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>📚 RECURSOS PRÁCTICOS</strong>
+                    <p class="mt-2 text-sm">Guías basadas en documentos especializados para ayudarte en tu día a día.</p>
+                    <div class="mt-3 p-3 bg-green-100 dark:bg-green-800 rounded">
+                        <p class="text-sm font-bold">🎁 ¡Material de Regalo Exclusivo!</p>
+                        <p class="text-xs mt-1">Descarga toda la información completa en mi Drive:</p>
+                        <a href="https://drive.google.com/drive/folders/1bC3FFr1M6FbM4LD1guohhK_8wsc2rZkC" target="_blank" class="chat-link text-sm font-bold block mt-2">📥 Drive - Material Completo Dany el Trainer</a>
+                        <p class="text-xs mt-2">Encontrarás guías detalladas, planificadores, recetas y mucho más.</p>
+                    </div>
+                </div>`, 
+                options: [ 
+                    { text: "🥚 Reemplazos Huevo", nextState: 'guide_huevo' }, 
+                    { text: "🥛 Yogur Vegano", nextState: 'guide_yogur' }, 
+                    { text: "📦 Meal Prep", nextState: 'meal_prep_intro' }, 
+                    { text: "📅 Planificador", nextState: 'guide_planner' },
+                    { text: "💧 Hidratación", nextState: 'hydration_info' },
+                    { text: "🍽️ Más Recetas", nextState: 'recipe_menu' },
+                    { text: "‹ Volver", nextState: 'start' } 
+                ] 
+            },
+
+            'guide_huevo': { 
+                message: `<div class="guide-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>🥚 REEMPLAZOS DEL HUEVO</strong>
+                    <ul class="list-disc list-inside mt-2 space-y-1 text-sm">
+                        <li><strong>Para aglutinar:</strong> Puré de plátano, manzana, o chía/linaza + agua</li>
+                        <li><strong>Para "huevo revuelto":</strong> Tofu desmenuzado con cúrcuma y sal negra</li>
+                        <li><strong>Para espumar:</strong> Aquafaba (agua de garbanzos)</li>
+                    </ul>
+                    <div class="mt-3 p-2 bg-yellow-100 dark:bg-yellow-800 rounded text-xs">
+                        <strong>💡 Material Completo:</strong> <a href="https://drive.google.com/drive/folders/1bC3FFr1M6FbM4LD1guohhK_8wsc2rZkC" target="_blank" class="chat-link">Descargar guía completa en Drive</a>
+                    </div>
+                </div>`, 
+                options: [ 
+                    { text: "‹ Volver", nextState: 'practical_guides' }
+                ] 
+            },
+
+            'guide_yogur': { 
+                message: `<div class="guide-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>🥛 YOGUR CASERO VEGANO</strong>
+                    <ul class="list-disc list-inside mt-2 space-y-1 text-sm">
+                        <li>Usa leche de soya con alto contenido de sólidos o añade un espesante como agar-agar</li>
+                        <li>Necesitas un cultivo iniciador (probióticos) y un poco de azúcar para la fermentación</li>
+                        <li>Mantén la mezcla a 45°C por 12-15 horas en yogurtera o termo</li>
+                    </ul>
+                    <div class="mt-3 p-2 bg-yellow-100 dark:bg-yellow-800 rounded text-xs">
+                        <strong>💡 Material Completo:</strong> <a href="https://drive.google.com/drive/folders/1bC3FFr1M6FbM4LD1guohhK_8wsc2rZkC" target="_blank" class="chat-link">Descargar guía completa en Drive</a>
+                    </div>
+                </div>`, 
+                options: [ 
+                    { text: "‹ Volver", nextState: 'practical_guides' }
+                ] 
+            },
+
+            'meal_prep_intro': { 
+                message: `<div class="guide-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>📦 MEAL PREP PLANT BASED</strong>
+                    <p class="mt-2 text-sm">Planificar y preparar tus comidas con antelación es clave para una alimentación consistente.</p>
+                    <p class="mt-2 text-sm"><strong>Beneficios:</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-sm">
+                        <li>Ahorrar tiempo y dinero</li>
+                        <li>Mantener el control sobre nutrientes</li>
+                        <li>Evitar decisiones impulsivas</li>
+                    </ul>
+                    <div class="mt-3 p-2 bg-yellow-100 dark:bg-yellow-800 rounded text-xs">
+                        <strong>💡 Material Completo:</strong> <a href="https://drive.google.com/drive/folders/1bC3FFr1M6FbM4LD1guohhK_8wsc2rZkC" target="_blank" class="chat-link">Descargar guía completa en Drive</a>
+                    </div>
+                </div>`, 
+                options: [ 
+                    { text: "‹ Volver", nextState: 'practical_guides' }
+                ] 
+            },
+
+            'guide_planner': { 
+                message: `<div class="guide-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>📅 PLANIFICADOR SEMANAL</strong>
+                    <p class="mt-2 text-sm">Una buena planificación es clave para el éxito.</p>
+                    <p class="mt-2 text-sm"><strong>Recomendaciones:</strong></p>
+                    <ul class="list-disc list-inside mt-1 text-sm">
+                        <li>Usa un planificador semanal para organizar comidas</li>
+                        <li>Crea lista de compras basada en tu plan</li>
+                        <li>Prepara ingredientes base los domingos</li>
+                    </ul>
+                    <div class="mt-3 p-2 bg-yellow-100 dark:bg-yellow-800 rounded text-xs">
+                        <strong>💡 Material Completo:</strong> <a href="https://drive.google.com/drive/folders/1bC3FFr1M6FbM4LD1guohhK_8wsc2rZkC" target="_blank" class="chat-link">Descargar guía completa en Drive</a>
+                    </div>
+                </div>`, 
+                options: [ 
+                    { text: "‹ Volver", nextState: 'practical_guides' }
+                ] 
+            },
+
+            // --- SERVICIOS ACTUALIZADOS ---
+            'services_info': {
+                message: `<div class="training-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>💼 MIS SERVICIOS</strong>
+                    <div class="mt-2 space-y-2 text-sm">
+                        <div>
+                            <strong>• Entrenamiento Personalizado</strong>
+                            <p>Online o presencial, planificación individualizada</p>
+                        </div>
+                        <div>
+                            <strong>• Escuela de Circo Urbano</strong>
+                            <p>Formación integral en artes circenses y movimiento</p>
+                        </div>
+                        <div>
+                            <strong>• Clases Grupales</strong>
+                            <p>Streetworkout, Breakdance y Acrobacias</p>
+                        </div>
+                        <div>
+                            <strong>• Workshops</strong>
+                            <p>Eventos para habilidades específicas</p>
+                        </div>
+                        <div>
+                            <strong>• Asesorías Integrales</strong>
+                            <p>Movimiento, ocupacional y nutrición</p>
+                        </div>
+                    </div>
+                </div>`,
+                options: [ 
+                    { text: "📞 Contactar", nextState: 'contact_info' }, 
+                    { text: "💡 Consejos", nextState: 'training_tips' }, 
+                    { text: "‹ Volver", nextState: 'start' } 
+                ]
+            },
+
+            'contact_info': {
+                message: `<div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-3 sm:p-4 rounded-lg chat-message"><strong>🚀 ¡ALCANCE SU MEJOR VERSIÓN!</strong><p class="mt-2 text-sm">Contáctame y empecemos a construir tu camino.</p><div class="mt-2 space-y-1 text-sm"><p><strong>📱 WhatsApp:</strong> <a href="https://wa.me/56935541341" target="_blank" class="underline font-bold">+56 9 3554 1341</a></p><p><strong>📸 Instagram Personal:</strong> <a href="https://instagram.com/dany.el.trainer" target="_blank" class="underline font-bold">@dany.el.trainer</a></p><p><strong>📸 Instagram Movimiento:</strong> <a href="https://instagram.com/dilo.con_movimiento" target="_blank" class="underline font-bold">@dilo.con_movimiento</a></p></div></div>`,
+                options: [ 
+                    { text: "‹ Volver", nextState: 'start' } 
+                ]
+            },
+
+            'info_trainer': { 
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">👤 DANY EL TRAINER</p>
+                    <div class="mt-2 space-y-1 text-sm">
+                        <p><strong>🎓 Formación:</strong> Técnico Superior en Preparación Física</p>
+                        <p><strong>🎭 Especialidades:</strong> Entrenamiento funcional, calistenia, artes circenses</p>
+                        <p><strong>🏫 Proyecto:</strong> Escuela de Circo Urbano</p>
+                        <p><strong>💡 Filosofía:</strong> "El movimiento es bienestar"</p>
+                    </div>
+                </div>`, 
+                options: [ { text: "💼 Servicios", nextState: 'services_info' }, { text: "‹ Volver", nextState: 'start' } ] 
+            },
+
+            // --- RECETAS COMPLETAS ---
+            'recipe_menu': {
+                message: `<div class="recipe-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-green-800 dark:text-green-200 text-sm sm:text-base">🍽️ RECETAS SALUDABLES</p>
+                    <p class="mt-2 text-sm">Elige una receta para ver los detalles:</p>
+                </div>`,
+                options: [
+                    { text: "🥞 Panqueques Avena", value: 'panqueques_avena', nextState: 'show_recipe' },
+                    { text: "🍫 Brownie Porotos", value: 'brownie_porotos', nextState: 'show_recipe' },
+                    { text: "🍔 Hamburguesas Lentejas", value: 'hamburguesas_lentejas', nextState: 'show_recipe' },
+                    { text: "🥛 Yogur Vegano", value: 'yogur_vegano', nextState: 'show_recipe' },
+                    { text: "🍳 Reemplazos Huevo", value: 'reemplazos_huevo', nextState: 'show_recipe' },
+                    { text: "‹ Volver", nextState: 'start' }
+                ],
+                action: (value) => { userData.recipe = value; }
+            },
+
+            'show_recipe': {
+                getMessage: (data) => recipes[data.recipe].message,
+                options: [ 
+                    { text: "🍽️ Otra Receta", nextState: 'recipe_menu' }, 
+                    { text: "‹ Volver", nextState: 'start' } 
+                ]
+            },
+
+            // --- HIDRATACIÓN ---
+            'hydration_info': { 
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>💧 HIDRATACIÓN</strong>
+                    <p class="mt-2 text-sm">Fundamental para el rendimiento y la salud.</p>
+                    <p class="mt-1 text-sm"><strong>Recomendación:</strong> 2 a 3 litros de agua al día.</p>
+                </div>`, 
+                options: [ 
+                    { text: "💧 Calcular", nextState: 'hydration_ask_activity' }, 
+                    { text: "‹ Volver", nextState: 'start' } 
+                ] 
+            },
+
+            'hydration_ask_activity': { 
+                message: "¿Cómo describirías tu actividad física?", 
+                options: [ 
+                    { text: "🏃‍♂️ Alta (Entreno intenso diario)", value: 'alta', nextState: 'hydration_calculate' }, 
+                    { text: "🚶‍♀️ Moderada (3-4 veces/semana)", value: 'moderada', nextState: 'hydration_calculate' }, 
+                    { text: "💻 Baja (Sedentario/oficina)", value: 'baja', nextState: 'hydration_calculate' } 
+                ], 
+                action: (value) => { userData.activityLevel = value; } 
+            },
+
+            'hydration_calculate': {
+                getMessage: (data) => {
+                    const baseWater = 2000; // ml base
+                    let additionalWater = 0;
+                    
+                    switch(data.activityLevel) {
+                        case 'alta': additionalWater = 1000; break;
+                        case 'moderada': additionalWater = 500; break;
+                        case 'baja': additionalWater = 0; break;
+                    }
+                    
+                    const totalWater = baseWater + additionalWater;
+                    
+                    return `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                        <strong>💧 RECOMENDACIÓN DE HIDRATACIÓN</strong>
+                        <p class="mt-2 text-sm">Según tu nivel de actividad (<strong>${data.activityLevel}</strong>):</p>
+                        <p class="mt-2 font-bold text-lg">${totalWater} ml - ${totalWater/1000} litros diarios</p>
+                        <p class="mt-2 text-sm">💡 <strong>Consejos:</strong></p>
+                        <ul class="list-disc list-inside text-sm">
+                            <li>Bebe 500ml extra por hora de ejercicio intenso</li>
+                            <li>Consume agua antes de tener sed</li>
+                            <li>Incluye alimentos ricos en agua (frutas, verduras)</li>
+                        </ul>
+                    </div>`;
+                },
+                options: [
+                    { text: "💧 Más Info Hidratación", nextState: 'hydration_tips' },
+                    { text: "‹ Volver", nextState: 'hydration_info' }
+                ]
+            },
+
+            'hydration_tips': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <strong>💧 CONSEJOS DE HIDRATACIÓN</strong>
+                    <ul class="list-disc list-inside mt-2 space-y-2 text-sm">
+                        <li><strong>Bebe antes de tener sed:</strong> La sed es el primer signo de deshidratación</li>
+                        <li><strong>Agua con electrolitos:</strong> Para entrenamientos largos o intensos</li>
+                        <li><strong>Monitorea tu orina:</strong> Color amarillo claro indica buena hidratación</li>
+                        <li><strong>Hidratación post-entreno:</strong> Recupera el 150% del peso perdido durante el ejercicio</li>
+                    </ul>
+                </div>`,
+                options: [
+                    { text: "‹ Volver", nextState: 'hydration_info' }
+                ]
+            },
+
+            // --- CÁLCULO DE MACROS (simplificado) ---
+            'ask_gender': { 
+                message: "Para calcular tus macros, necesito algunos datos. ¿Cuál es tu género?", 
+                options: [ 
+                    { text: "Hombre", value: 'male', nextState: 'macro_results' }, 
+                    { text: "Mujer", value: 'female', nextState: 'macro_results' } 
+                ], 
+                action: (value) => { userData.gender = value; } 
+            },
+
+            'macro_results': {
+                getMessage: (data) => {
+                    return `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                        <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">📊 CALCULADORA DE MACROS</p>
+                        <p class="mt-2 text-sm">Para un cálculo personalizado preciso, te recomiendo contactarme directamente.</p>
+                        <p class="mt-2 text-sm">Puedo ayudarte a determinar tus necesidades específicas según:</p>
+                        <ul class="list-disc list-inside mt-1 text-sm">
+                            <li>Tus objetivos (pérdida de grasa, ganancia muscular, mantenimiento)</li>
+                            <li>Tu nivel de actividad y tipo de entrenamiento</li>
+                            <li>Tu historial médico y preferencias alimentarias</li>
+                        </ul>
+                        <div class="mt-3 p-2 sm:p-3 bg-yellow-100 dark:bg-yellow-800 rounded text-xs sm:text-sm">
+                            <strong>💡 Importante:</strong> Los cálculos genéricos no consideran tu individualidad bioquímica y necesidades específicas.
+                        </div>
+                    </div>`;
+                },
+                options: [ 
+                    { text: "📞 Contactar para cálculo", nextState: 'contact_info' }, 
+                    { text: "💡 Consejos Entrenamiento", nextState: 'training_tips' }, 
+                    { text: "‹ Volver", nextState: 'nutrition_main' } 
+                ]
+            },
+
+            // SUPLEMENTOS
+            'info_suplementos': {
+                message: `<div class="info-card p-3 sm:p-4 rounded-lg chat-message">
+                    <p class="font-bold text-blue-800 dark:text-blue-200 text-sm sm:text-base">💊 INFORMACIÓN SOBRE SUPLEMENTOS</p>
+                    <p class="mt-2 text-sm">Los suplementos pueden ser útiles, pero recuerda que son solo eso: un <strong>complemento</strong> a una buena base nutricional y de entrenamiento.</p>
+                    
+                    <div class="mt-3">
+                        <p class="text-sm"><strong>🔹 Suplementos básicos recomendados:</strong></p>
+                        <ul class="list-disc list-inside mt-1 text-sm">
+                            <li><strong>Proteína en polvo:</strong> Conveniente para alcanzar tus metas de proteína diaria</li>
+                            <li><strong>Creatina monohidratada:</strong> Mejora el rendimiento en ejercicios de alta intensidad</li>
+                            <li><strong>Omega-3:</strong> Importante para la salud cardiovascular y antiinflamación</li>
+                            <li><strong>Vitamina D:</strong> Especialmente si tienes poca exposición solar</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-3 p-3 bg-yellow-100 dark:bg-yellow-800 rounded text-sm">
+                        <p><strong>⚠️ Importante:</strong> Consulta con un profesional antes de comenzar cualquier suplementación, especialmente si tienes condiciones médicas preexistentes.</p>
+                    </div>
+                </div>`,
+                options: [ { text: "‹ Volver", nextState: 'learn_pyramid_level5' } ]
+            }
+        };
+
+        // Funciones auxiliares (las mismas del código anterior)
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `<div class="flex items-start space-x-1 p-3"><div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce-slow"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce-slow" style="animation-delay: 0.1s"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce-slow" style="animation-delay: 0.2s"></div></div>`;
+            chatWindow.appendChild(typingDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        function addMessage(sender, htmlContent, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('flex', 'items-start', 'max-w-md', 'rounded-xl', 'p-3', 'transition-opacity', 'duration-500', 'opacity-0');
+            if (isUser) {
+                messageDiv.classList.add('bg-red-500', 'text-white', 'self-end', 'rounded-br-none');
+                messageDiv.textContent = htmlContent;
+            } else {
+                messageDiv.classList.add('self-start', 'rounded-bl-none');
+                messageDiv.innerHTML = `<div class="bot-message-content">${htmlContent}</div>`;
+            }
+            chatWindow.appendChild(messageDiv);
+            setTimeout(() => messageDiv.classList.remove('opacity-0'), 10);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function displayCurrentState() {
+            const state = conversationTree[conversationState];
+            if (!state) return;
+            
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                if (state.getMessage) {
+                    addMessage('bot', state.getMessage(userData));
+                } else {
+                    addMessage('bot', state.message);
+                }
+
+                optionsContainer.innerHTML = '';
+                inputContainer.classList.add('hidden');
+                
+                if (state.options) {
+                    state.options.forEach(option => {
+                        const button = document.createElement('button');
+                        button.textContent = option.text;
+                        button.classList.add('option-btn', 'bg-red-100', 'dark:bg-red-900', 'text-red-800', 'dark:text-red-200', 'py-2', 'px-4', 'rounded-full', 'font-semibold', 'text-sm', 'mb-1');
+                        button.addEventListener('click', () => {
+                            addMessage('user', option.text, true);
+                            if (option.value && state.action) {
+                                state.action(option.value);
+                            }
+                            conversationState = option.nextState;
+                            setTimeout(displayCurrentState, 300);
+                        });
+                        optionsContainer.appendChild(button);
+                    });
+                } else if (state.inputType) {
+                    inputContainer.classList.remove('hidden');
+                    userInput.type = state.inputType;
+                    userInput.value = '';
+                    userInput.placeholder = 'Escribe tu respuesta aquí...';
+                    userInput.focus();
+                }
+            }, 800);
+        }
+
+        function handleTextInput() {
+            const state = conversationTree[conversationState];
+            const value = userInput.value.trim();
+            
+            if (!value || !state || !state.inputType) return;
+            
+            // Validar si el estado tiene una función de validación
+            if (state.validate) {
+                const error = state.validate(value);
+                if (error) {
+                    addMessage('user', value, true);
+                    addMessage('bot', `<div class="info-card p-3 rounded"><p class="font-bold text-red-800 dark:text-red-200">❌ Error</p><p class="mt-1 text-sm">${error}</p></div>`);
+                    userInput.value = '';
+                    return;
+                }
+            }
+            
+            addMessage('user', value, true);
+            conversationState = state.nextState;
+            userInput.value = '';
+            setTimeout(displayCurrentState, 300);
+        }
+
+        // Inicializar event listeners
+        sendBtn.addEventListener('click', handleTextInput);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleTextInput();
+            }
+        });
+
+        // Iniciar la conversación
+        setTimeout(() => displayCurrentState(), 500);
+
+    </script>
+</body>
+</html>
